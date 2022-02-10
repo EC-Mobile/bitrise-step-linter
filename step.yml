@@ -1,0 +1,118 @@
+title: |-
+  Linter
+summary: |
+  This step will lint, do fixable changes and create a PR for review.
+description: |
+  This step will lint, do fixable changes and create a PR for review.
+  It uses swift lint and expects SwiftLint pod integrated.
+website: https://github.com/EC-Mobile/bitrise-step-linter
+source_code_url: https://github.com/EC-Mobile/bitrise-step-linter
+support_url: https://github.com/EC-Mobile/bitrise-step-linter
+host_os_tags:
+  - osx-10.10
+  - ubuntu-16.04
+type_tags:
+  - utility
+is_requires_admin_user: true
+is_always_run: false
+is_skippable: true
+run_if: ""
+
+deps:
+  brew:
+  - name: git
+  - name: wget
+  apt_get:
+  - name: git
+  - name: wget
+
+toolkit:
+  bash:
+    entry_file: step.sh
+
+inputs:
+
+  - ACCESS_TOKEN: 
+    opts:
+      title: Access Token
+      summary: Token to access you bitbucket account
+      description: |
+        Access token should have permission to create repo.
+        This step uses bitbucket rest api V1.0, it expects your domain installed rest api.
+        It will call the following API with provided params:
+          **{YOUR DOMAIN}**/rest/api/1.0/projects/**{GIT_PROJECT}**/repos/**{GIT_REPO}**/pull-requests
+        
+        **API deatils can be found here:**
+          https://docs.atlassian.com/bitbucket-server/rest/5.16.0/bitbucket-rest.html#idm8287391664
+      is_required: true
+      is_sensitive: true
+
+  - GIT_BASE_URL: 
+    opts:
+      title: BitBucket Server URL
+      summary: Base url to your bitbucket server, e.g; https://myrepodomain.com.
+      description: |
+        This step uses bitbucket rest api V1.0, it expects your domain installed rest api.
+        It will call the following API with provided params:
+          **{YOUR DOMAIN}**/rest/api/1.0/projects/**{GIT_PROJECT}**/repos/**{GIT_REPO}**/pull-requests
+        
+        **API deatils can be found here:**
+          https://docs.atlassian.com/bitbucket-server/rest/5.16.0/bitbucket-rest.html#idm8287391664
+      is_required: true
+
+  - GIT_PROJECT: 
+    opts:
+      title: Project Name
+      summary: BitBucket project name, e.g; App-MOBILE.
+      description: |
+        This step uses bitbucket rest api V1.0, it expects your domain installed rest api.
+        It will call the following API with provided params:
+          **{YOUR DOMAIN}**/rest/api/1.0/projects/**{GIT_PROJECT}**/repos/**{GIT_REPO}**/pull-requests
+        
+        **API deatils can be found here:**
+          https://docs.atlassian.com/bitbucket-server/rest/5.16.0/bitbucket-rest.html#idm8287391664
+      is_required: true
+
+  - GIT_REPO: 
+    opts:
+      title: Repo Name
+      summary: BitBucket repo name, e.g; twitter-ios.
+      description: |
+        This step uses bitbucket rest api V1.0, it expects your domain installed rest api.
+        It will call the following API with provided params:
+          **{YOUR DOMAIN}**/rest/api/1.0/projects/**{GIT_PROJECT}**/repos/**{GIT_REPO}**/pull-requests
+        
+        **API deatils can be found here:**
+          https://docs.atlassian.com/bitbucket-server/rest/5.16.0/bitbucket-rest.html#idm8287391664
+      is_required: true
+
+  - PR_REVIEWERS: 
+    opts:
+      title: Bitbucket User Names 
+      summary: These users will be added as a reviewer in the new PR.
+      description: |
+        This values will be passed as users in reviewers to the following API json body.
+        This step uses bitbucket rest api V1.0, it expects your domain installed rest api.
+        It will call the following API with provided params:
+          **{YOUR DOMAIN}**/rest/api/1.0/projects/**{GIT_PROJECT}**/repos/**{GIT_REPO}**/pull-requests
+        
+        **API deatils can be found here:**
+          https://docs.atlassian.com/bitbucket-server/rest/5.16.0/bitbucket-rest.html#idm8287391664
+      is_required: true
+
+  - BRANCH_CONDITION: 
+    opts:
+      title: Which Branch To Lint
+      summary: RegEx to check which branch to perform lint.
+      description: |
+        RegEx to check which branch to perform lint.
+        To apply on all pass ".*"
+      is_required: true
+
+outputs:
+  - AUTO_LINT_PR:
+    opts:
+      title: Resultant PR URL or null 
+      summary: Resultant PR URL or null 
+      description: |
+        Resultant PR URL or null 
