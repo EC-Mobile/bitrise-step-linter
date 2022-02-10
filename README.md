@@ -1,7 +1,6 @@
-# Outdated Libs Stats
+# bitrise step linter
 
-This step will create report about versions of used libraries.
-
+Run Swiftlint auto fix and create a PR.
 
 ## Required Params and Sample Values
 
