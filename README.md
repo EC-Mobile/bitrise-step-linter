@@ -27,12 +27,12 @@ Add this in your bitrise.yml file and replace proper variables:
 
 ```
 - git::https://github.com/EC-Mobile/bitrise-step-linter.git@main:
-    title: PR Creator
+    title: Swift Linter
     inputs:
     - ACCESS_TOKEN: <Variable>
     - GIT_BASE_URL: <Bitbucket Domain>
     - GIT_PROJECT: <Project>
     - GIT_REPO: <Repo>
     - PR_REVIEWERS: <Variable>
-    - BRANCH_CONDITION: <Variable>
+    - BRANCH_CONDITION: .*
 ```

@@ -75,7 +75,7 @@ inputs:
 
   - GIT_REPO: 
     opts:
-      title: Project Name
+      title: Repo Name
       summary: BitBucket repo name, e.g; twitter-ios.
       description: |
         This step uses bitbucket rest api V1.0, it expects your domain installed rest api.
