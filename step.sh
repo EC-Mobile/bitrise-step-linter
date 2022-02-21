@@ -63,11 +63,12 @@ function createPR() {
 
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------
-
+# export BRANCH_CONDITION=".*"
 echo "Preparing Branch..."
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 echo "Current branch is: ${CURRENT_BRANCH}"
 
+echo "Validating current branch.."
 if ! [[ ${CURRENT_BRANCH} =~ ${BRANCH_CONDITION} ]]; then
     echo "This branch does not match condtion: $BRANCH_CONDITION"
     exit 0
@@ -108,18 +109,31 @@ echo "--------------------------------------------"
 git diff-index --quiet HEAD -- || {
     echo "Found changes after lint !"
     git commit -a -m "Applied fixable lint issues using Swift Lint." # -a is to commit only modified and deleted files
-    git push --set-upstream origin $FIX_BRANCH --force
-
-    echo "Creating PR..."
-    echo "--------------------------------------------"
-    PR_TITLE="[Merge With Care] Auto lint of ${CURRENT_BRANCH}"
-    PR_DESCRIPTION="Applied auto lint to the branch: ${CURRENT_BRANCH}"
-    BRANCH_FROM="${FIX_BRANCH}"
-    BRANCH_TO="${CURRENT_BRANCH}"
     
-    createPR
-    echo "--------------------------------------------"
-    envman add --key AUTO_LINT_PR --value "$AUTO_LINT_PR"
+    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+    echo "Checking the changes are redundant..."
+    REMOTE_FIX_EXISTS=$(git ls-remote --heads origin $FIX_BRANCH | wc -l)
+    DIFF_WITH_REMOTE=$(git diff --name-only $FIX_BRANCH origin/$FIX_BRANCH | wc -l)
+    echo "Remote Fix exists: $REMOTE_FIX_EXISTS"
+    echo "Has diff with local and remote fixes: $DIFF_WITH_REMOTE"
+    if [[ REMOTE_FIX_EXISTS == 0 || $DIFF_WITH_REMOTE -gt 0 ]]; 
+    then
+        echo "Pushing the changes..."
+        git push --set-upstream origin $FIX_BRANCH --force
+
+        echo "Creating PR..."
+        echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        PR_TITLE="[Merge With Care] Auto lint of ${CURRENT_BRANCH}"
+        PR_DESCRIPTION="Applied auto lint to the branch: ${CURRENT_BRANCH}"
+        BRANCH_FROM="${FIX_BRANCH}"
+        BRANCH_TO="${CURRENT_BRANCH}"
+        
+        createPR
+        echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        envman add --key AUTO_LINT_PR --value "$AUTO_LINT_PR"
+    else
+        echo "Skipping push as duplicate task..."
+    fi
 }
 echo "--------------------------------------------"
 
