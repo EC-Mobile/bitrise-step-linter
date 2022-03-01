@@ -64,8 +64,14 @@ function createPR() {
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------
 # export BRANCH_CONDITION=".*"
+
+echo "GIT_BRANCH: $GIT_BRANCH"
 echo "Preparing Branch..."
-CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+CURRENT_BRANCH=$GIT_BRANCH
+if [ -z ${CURRENT_BRANCH} ]; then
+    echo "Git Branch not provided...."
+    exit 0
+fi  
 echo "Current branch is: ${CURRENT_BRANCH}"
 
 echo "Validating current branch.."

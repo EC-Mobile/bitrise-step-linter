@@ -86,6 +86,14 @@ inputs:
           https://docs.atlassian.com/bitbucket-server/rest/5.16.0/bitbucket-rest.html#idm8287391664
       is_required: true
 
+  - GIT_BRANCH: 
+    opts:
+      title: Branch To Lint
+      summary: Branch name To Lint or null if to skip
+      description: |
+        Branch name To Lint or null if to skip
+      is_required: true
+
   - PR_REVIEWERS: 
     opts:
       title: Bitbucket User Names 
