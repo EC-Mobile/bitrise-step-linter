@@ -64,6 +64,7 @@ function createPR() {
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------
 # export BRANCH_CONDITION=".*"
+# export GIT_BRANCH="develop"
 
 echo "GIT_BRANCH: $GIT_BRANCH"
 echo "Preparing Branch..."
@@ -118,16 +119,17 @@ git diff-index --quiet HEAD -- || {
     
     echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
     echo "Checking the changes are redundant..."
-    REMOTE_FIX_EXISTS=$(git ls-remote --heads origin $FIX_BRANCH | wc -l)
+    REMOTE_FIX_EXISTS=$(git ls-remote --heads origin $FIX_BRANCH | wc -l | xargs)
+    echo "Remote Fix exists: '$REMOTE_FIX_EXISTS'"
+
     DIFF_WITH_REMOTE=0
-    if [[ $REMOTE_FIX_EXISTS == 0 ]]; 
+    if [[ $REMOTE_FIX_EXISTS == '1' ]]; 
     then
         echo "Checking diff from remote fix branch..."
-        $DIFF_WITH_REMOTE=$(git diff --name-only $FIX_BRANCH origin/$FIX_BRANCH | wc -l)
+        DIFF_WITH_REMOTE=$(git diff --name-only $FIX_BRANCH origin/$FIX_BRANCH | wc -l | xargs)
     fi
-    echo "Remote Fix exists: $REMOTE_FIX_EXISTS"
-    echo "Has diff with local and remote fixes: $DIFF_WITH_REMOTE"
-    if [[ $REMOTE_FIX_EXISTS == 0 || $DIFF_WITH_REMOTE -gt 0 ]]; 
+    echo "Has diff with local and remote fixes: '$DIFF_WITH_REMOTE'"
+    if [[ $REMOTE_FIX_EXISTS == '0' || $DIFF_WITH_REMOTE -gt 0 ]]; 
     then
         echo "Pushing the changes..."
         git push --set-upstream origin $FIX_BRANCH --force
@@ -150,3 +152,4 @@ echo "--------------------------------------------"
 
 git reset --hard
 git checkout $CURRENT_BRANCH
+git branch -D $FIX_BRANCH
