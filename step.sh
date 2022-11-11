@@ -86,7 +86,7 @@ if [[ "$CURRENT_BRANCH" == *"autolint"* ]]; then
     exit 0
 fi
 
-FIX_BRANCH="${CURRENT_BRANCH}-autolint"
+FIX_BRANCH="autolint/${CURRENT_BRANCH}"
 echo "Fix branch is: ${FIX_BRANCH}"
 
 echo "Updating Existing OR Creating New Commit..."
