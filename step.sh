@@ -133,20 +133,19 @@ git diff-index --quiet HEAD -- || {
     then
         echo "Pushing the changes..."
         git push --set-upstream origin $FIX_BRANCH --force
-
-        echo "Creating PR..."
-        echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-        PR_TITLE="[Merge With Care] Auto lint of ${CURRENT_BRANCH}"
-        PR_DESCRIPTION="Applied auto lint to the branch: ${CURRENT_BRANCH}"
-        BRANCH_FROM="${FIX_BRANCH}"
-        BRANCH_TO="${CURRENT_BRANCH}"
-        
-        createPR
-        echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-        envman add --key AUTO_LINT_PR --value "$AUTO_LINT_PR"
     else
         echo "Skipping push as duplicate task..."
     fi
+
+    echo "Creating PR..."
+    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+    PR_TITLE="[Merge With Care] Auto lint of ${CURRENT_BRANCH}"
+    PR_DESCRIPTION="Applied auto lint to the branch: ${CURRENT_BRANCH}"
+    BRANCH_FROM="${FIX_BRANCH}"
+    BRANCH_TO="${CURRENT_BRANCH}"
+    createPR
+    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+    envman add --key AUTO_LINT_PR --value "$AUTO_LINT_PR"
 }
 echo "--------------------------------------------"
 
